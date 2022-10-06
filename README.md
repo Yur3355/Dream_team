@@ -4,7 +4,7 @@
 
 Авдеев Леонид - Dobrynia100
 
-Боброва Алла - alla-bobrova
+Боброва Алла - alla-bobrova - Product Owner
 
 Визгалов Юрий - Yur3355
 
