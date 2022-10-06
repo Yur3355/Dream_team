@@ -2,14 +2,14 @@
 
 В нашей команде:
 
-Авдеев Леонид - Dobrynia100
+Авдеев Леонид - Dobrynia100 - Scrum Master
 
 Боброва Алла - alla-bobrova - Product Owner
 
-Визгалов Юрий - Yur3355
+Визгалов Юрий - Yur3355 - Developer
 
-Волков Сергей - GucciSkrip
+Волков Сергей - GucciSkrip - Developer
 
-Куликов Алексей - Lexakul
+Куликов Алексей - Lexakul - Developer
 
-Рыбкин Александр -  Dad0va
+Рыбкин Александр -  Dad0va - Developer
