@@ -2,5 +2,5 @@ settings = {
     'CLIENT_ID':'123',
     'SECRET_CODE':'123',
     'TOKEN':'vk1.a.dmZI7jlB1S26qaZsBHxk1Wk9FyG5EHgtKBn2mkCIzhjKwnPHVCjKNOA2irS3-Ui_V4QesbQA-ojQDRQxWQUeYE5-5j7rLSppAEyrwQAKrIUMFJw5edMgM43T-P-LpabBHfrAt9VaFPze1KDzw9MVgNoa2oSdDloKEeJtBneviwBqmOf5k9MklElhEeLrHZieSyWTiD2o--jkUzUmpuMqsQ',
-    'VKTOKEN':'vk1.a.QU5dPoCWqx8GRNOEaZHA9wNJZrPf8v4nxXXoqY_ce_ZqNOOSGflFQF6C555MePe_a7eqq4Ys_9thNiazBwdnjhdFgKrtT9tbmLxCi3ctSpaYB-0Fp1B763OSf8yyqbXIrHFsKROITEtKKhbo3fV9AkztrHQ2j9xF37Y1Z54kB4lPZCXZHzmgtJnQFVRtyJXV'
+
 }
