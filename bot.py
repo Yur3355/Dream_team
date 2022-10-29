@@ -13,7 +13,7 @@ def get_weather():
      #наш город на координатах широта=56.3264816, долгота=44.0051395
      # "https://api.openweathermap.org/data/2.5/weather?lat=56.3264816&lon=44.0051395&lang=ru&units=metric&appid=944b91c7a40842198fd6a61c32fe5453"
     end_point ="https://api.weatherbit.io/v2.0/current?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key=" #запрос к апи weatherbit с параметрами долготы и широты,языка и системой мер
-    key="679b7c2cbd8941de96caea3de21b8732"       #ключ доступа
+    key="insert_key"       #ключ доступа
     url = end_point+ key #создаем ссылку
     json_data = urllib.request.urlopen(url).read()   #читаем данные из JSON полученного из нашей ссылки
     data = json.loads(json_data)                  #загружаем их в переменную
