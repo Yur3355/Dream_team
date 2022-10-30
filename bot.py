@@ -84,8 +84,7 @@ longpoll = VkBotLongPoll(authorize, group_id="216563568")      # отправл�
 print("Бот запущен!")
 
 def menu(reseived_message):
-
-    if reseived_message=="привет":    
+    if reseived_message == "привет":
         write_message(chat, "Вас приветствует бот прогноза погоды. Хотите узнать прогноз? \nда \nнет")
 
     elif reseived_message == "нет":
