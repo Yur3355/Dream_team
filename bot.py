@@ -47,11 +47,10 @@ def menu(reseived_message):
     if reseived_message=="привет":    
         write_message(chat, "Вас приветствует бот прогноза погоды. Хотите узнать прогноз? \nда \nнет")
 
-        if reseived_message == "нет":
+    if reseived_message == "нет":
             write_message(chat, "До свидания!")
        
-        elif reseived_message == "да":
-        
+    if reseived_message == "да": 
             write_message(chat, "Выберите период \n6 часов \nзавтра \n3 дня \nнеделя \nсейчас")
 
             if reseived_message == "6часов":
