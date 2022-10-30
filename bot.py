@@ -43,32 +43,31 @@ longpoll = VkBotLongPoll(authorize, group_id="216563568")      # отправл�
 print("Бот запущен!")
 
 def menu(reseived_message):
-
-    if reseived_message=="привет":    
+ if reseived_message == "привет":
         write_message(chat, "Вас приветствует бот прогноза погоды. Хотите узнать прогноз? \nда \nнет")
 
-    if reseived_message == "нет":
-            write_message(chat, "До свидания!")
-       
-    if reseived_message == "да": 
-            write_message(chat, "Выберите период \n6 часов \nзавтра \n3 дня \nнеделя \nсейчас")
+    elif reseived_message == "нет":
+        write_message(chat, "До свидания!")
 
-            if reseived_message == "6часов":
-                write_message(chat, "Ваш прогноз:")
-                ##  вызов функции ## 
+    elif reseived_message == "да":
+        write_message(chat, "Выберите период \n6 часов \nзавтра \n3 дня \nнеделя \nтекущая")
 
-            elif reseived_message == "3дня":
-                write_message(chat, "Ваш прогноз:")
-                ##  вызов функции ##
+    if reseived_message == "6часов":
+        write_message(chat, "Ваш прогноз:")
+    
 
-            elif reseived_message == "неделя": 
-                write_message(chat, "Ваш прогноз:")
-                ##  вызов функции ##
+    elif reseived_message == "3дня":
+        write_message(chat, "Ваш прогноз:")
+              
 
-            elif reseived_message == "текущая":
-                print("Погода отправлена в ", chat)
-                current = get_weather()
-                write_message(chat, print_weather(current))
+    elif reseived_message == "неделя": 
+        write_message(chat, "Ваш прогноз:")
+               
+
+    elif reseived_message == "текущая":
+        print("Погода отправлена в ", chat)
+        current = get_weather()
+        write_message(chat, print_weather(current))
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
