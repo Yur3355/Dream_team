@@ -65,7 +65,7 @@ def menu(reseived_message):
                 write_message(chat, "Ваш прогноз:")
                 ##  вызов функции ##
 
-            elif reseived_message == "сейчас":
+            elif reseived_message == "текущая":
                 print("Погода отправлена в ", chat)
                 current = get_weather()
                 write_message(chat, print_weather(current))
