@@ -1,5 +1,6 @@
 import vk_api
 import config
+import re
 import urllib
 import json
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
@@ -9,50 +10,26 @@ import string
 token = config.settings['TOKEN']    # присваиваем переменной значение токена из файла конфига
 group_id="216563568"                # id выбранной для работы бота группы
 
-def get_weather(period,):
+def get_weather():
      # наш город на координатах широта=56.3264816, долгота=44.0051395
      # "https://api.openweathermap.org/data/2.5/weather?lat=56.3264816&lon=44.0051395&lang=ru&units=metric&appid=944b91c7a40842198fd6a61c32fe5453"
-    if period==1:
-        end_point ="https://api.weatherbit.io/v2.0/current?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key=" # запрос к апи weatherbit с параметрами долготы и широты,языка и системой мер
-        key="679b7c2cbd8941de96caea3de21b8732"                  # ключ доступа
-    elif period==7:
-       end_point = "https://api.weatherbit.io/v2.0/forecast/daily?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key="  # запрос к апи с погодой на следующие 7 дней
-       key = "679b7c2cbd8941de96caea3de21b8732"
-    elif period == 3:
-       end_point = "апи"
-       key = "вставить токен апи"
-    elif period == 6:
-       end_point = "апи"
-       key = "вставить токен апи"
-
-    url = end_point+key                                    # создаем ссылку
+    end_point ="https://api.weatherbit.io/v2.0/current?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key=" # запрос к апи weatherbit с параметрами долготы и широты,языка и системой мер
+    key="679b7c2cbd8941de96caea3de21b8732"                  # ключ доступа
+    url = end_point+ key                                    # создаем ссылку
     json_data = urllib.request.urlopen(url).read()          # читаем данные из JSON полученного из нашей ссылки
-    current_weather= json.loads(json_data)                            # загружаем их в переменную
-
+    data = json.loads(json_data)                            # загружаем их в переменную
+    #print(data)
+    current_weather =data['data'][0]                        # выбираем нужную нам часть с данными
+    #print(current_weather['weather'])
     return current_weather                                  # возвращаем полученную информацию
 
-def toFixed(numObj, digits=0):
-    return f"{numObj:.{digits}f}"
-
-def print_weather(data,period,i):      # функция получения текущего города
-    # print(data)
-    current_weather = data['data'][i]  # выбираем нужную нам часть с данными
-    print(data['data'][i])
-    date = current_weather['datetime']
-    desc = current_weather['weather']['description']
-    wind = current_weather['wind_cdir_full']
-    wind_spd = current_weather['wind_spd']
-    wind_spd = toFixed(wind_spd, 2)
-    if period==1:
-        city=current_weather['city_name']
-        temp = current_weather['app_temp']
-
-        weather = date + '\n' + desc + ' - ' + str(temp) + 'C \n' + "Ветер - " + wind+'\nСкорость ветра - '+ str(wind_spd)+' м/с'
-    elif period==7:
-        temp = current_weather['app_max_temp']
-
-        weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(temp) + 'C \n' + "Ветер - " +wind+'\nСкорость ветра - '+ str(wind_spd)+' м/с'
+def print_weather(current_weather):                         # функция получения текущего города
+    city=current_weather['city_name']
+    temp=current_weather['app_temp']
+    desc=current_weather['weather']['description']
+    wind=current_weather['wind_cdir_full']
     # print(city,'\n',desc,temp,'\n Ветер -',wind)
+    weather=city+'\n'+desc+str(temp)+'\n'+"Ветер - "+wind
     # print(weather)
     return weather
 
@@ -66,40 +43,32 @@ longpoll = VkBotLongPoll(authorize, group_id="216563568")      # отправл�
 print("Бот запущен!")
 
 def menu(reseived_message):
-    if reseived_message == "привет":
+
+    if reseived_message=="привет":    
         write_message(chat, "Вас приветствует бот прогноза погоды. Хотите узнать прогноз? \nда \nнет")
 
-    elif reseived_message == "нет":
-        write_message(chat, "До свидания!")
+    if reseived_message == "нет":
+            write_message(chat, "До свидания!")
+       
+    if reseived_message == "да": 
+            write_message(chat, "Выберите период \n6 часов \nзавтра \n3 дня \nнеделя \nсейчас")
 
-    elif reseived_message == "да":
-        write_message(chat, "Выберите период \n6 часов \nзавтра \n3 дня \nнеделя \nтекущая")
+            if reseived_message == "6часов":
+                write_message(chat, "Ваш прогноз:")
+                ##  вызов функции ## 
 
-    if reseived_message == "6часов":
-        write_message(chat, "Ваш прогноз:")
-        print("Погода на 6 часов отправлена в ", chat)
-        hours = get_weather(6)
-      # write_message(chat, print_weather(hours,6))
+            elif reseived_message == "3дня":
+                write_message(chat, "Ваш прогноз:")
+                ##  вызов функции ##
 
-    elif reseived_message == "3дня":
-        write_message(chat, "Ваш прогноз:")
-        print("Погода на 3 дня отправлена в ", chat)
-        days = get_weather(3)
-        for i in range(3):
-         write_message(chat, print_weather(days,3))
+            elif reseived_message == "неделя": 
+                write_message(chat, "Ваш прогноз:")
+                ##  вызов функции ##
 
-    elif reseived_message == "неделя":
-        print("Погода на неделю отправлена в ", chat)
-        write_message(chat, "Ваш прогноз:")
-        week = get_weather(7)
-        for i in range(7):
-         write_message(chat, print_weather(week,7,i))
-
-    elif reseived_message == "текущая":
-        print("Текущая погода отправлена в ", chat)
-        write_message(chat, "Ваш прогноз:")
-        current = get_weather(1)
-        write_message(chat, print_weather(current,1,0))
+            elif reseived_message == "текущая":
+                print("Погода отправлена в ", chat)
+                current = get_weather()
+                write_message(chat, print_weather(current))
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
@@ -113,4 +82,7 @@ for event in longpoll.listen():                               # ждем от с
         chat = event.chat_id                                    # сохраняем номер чата
         print('из чата', chat)
         from_id = event.message.get('from_id')
+    
         menu(reseived_message)
+
+    
