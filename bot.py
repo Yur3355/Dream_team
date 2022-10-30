@@ -109,13 +109,10 @@ for event in longpoll.listen():                               # ждем от с
     if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat and event.message.get('text'): 
         # если тип ивента это новое сообщение, оно из чата и сообщение в ивенте текстовое
        
-        reseived_message = event.message.get('text')            # то сохраняем полученное сообщение
-        reseived_message.lower()                                # в нижний регистр
-        reseived_message.translate({ord(c): None for c in string.whitespace})       # если было введено раздельно, убрали пробелы
+        reseived_message = event.message.get('text')            # то сохраняем полученное сообщение                                      # в нижний регистр
+        reseived_message=reseived_message.translate({ord(c): None for c in string.whitespace})       # если было введено раздельно, убрали пробелы
 
         chat = event.chat_id                                    # сохраняем номер чата
         print('из чата', chat)
         from_id = event.message.get('from_id')
-        menu(reseived_message)
-
-    
+        menu(reseived_message.lower())
