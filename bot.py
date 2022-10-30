@@ -1,5 +1,6 @@
 import vk_api
 import config
+import re
 import urllib
 import json
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
@@ -66,7 +67,8 @@ longpoll = VkBotLongPoll(authorize, group_id="216563568")      # отправл�
 print("Бот запущен!")
 
 def menu(reseived_message):
-    if reseived_message == "привет":
+
+    if reseived_message=="привет":    
         write_message(chat, "Вас приветствует бот прогноза погоды. Хотите узнать прогноз? \nда \nнет")
 
     elif reseived_message == "нет":
@@ -104,9 +106,9 @@ def menu(reseived_message):
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
-    if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat and event.message.get('text'):
+    if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat and event.message.get('text'): 
         # если тип ивента это новое сообщение, оно из чата и сообщение в ивенте текстовое
-
+       
         reseived_message = event.message.get('text')            # то сохраняем полученное сообщение
         reseived_message.lower()                                # в нижний регистр
         reseived_message.translate({ord(c): None for c in string.whitespace})       # если было введено раздельно, убрали пробелы
@@ -115,3 +117,5 @@ for event in longpoll.listen():                               # ждем от с
         print('из чата', chat)
         from_id = event.message.get('from_id')
         menu(reseived_message)
+
+    
