@@ -52,7 +52,7 @@ def menu(reseived_message):
        
         elif reseived_message == "да":
         
-            write_message(chat, "Выберите период \n6 часов \nзавтра \n3 дня \nнеделя") 
+            write_message(chat, "Выберите период \n6 часов \nзавтра \n3 дня \nнеделя \nна текущий момент")
 
             if reseived_message == "6часов":
                 write_message(chat, "Ваш прогноз:")
@@ -65,6 +65,11 @@ def menu(reseived_message):
             elif reseived_message == "неделя": 
                 write_message(chat, "Ваш прогноз:")
                 ##  вызов функции ##
+
+            elif reseived_message == "погода":
+                print("Погода отправлена в ", chat)
+                current = get_weather()
+                write_message(chat, print_weather(current))
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
@@ -83,9 +88,6 @@ for event in longpoll.listen():                               # ждем от с
 
 
     '''
-     if reseived_message=="погода":
-        print("Погода отправлена в ", chat)
-        current = get_weather()
-        write_message(chat, print_weather(current))
+     
     '''
     
