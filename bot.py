@@ -16,13 +16,13 @@ def get_weather(period,):
      # "https://api.openweathermap.org/data/2.5/weather?lat=56.3264816&lon=44.0051395&lang=ru&units=metric&appid=944b91c7a40842198fd6a61c32fe5453"
     if period==1:
         end_point ="https://api.weatherbit.io/v2.0/current?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key=" # запрос к апи weatherbit с параметрами долготы и широты,языка и системой мер
-        key="679b7c2cbd8941de96caea3de21b8732"                  # ключ доступа
+        key="your-key"                  # ключ доступа
     elif period==7:
        end_point = "https://api.weatherbit.io/v2.0/forecast/daily?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key="  # запрос к апи с погодой на следующие 7 дней
-       key = "679b7c2cbd8941de96caea3de21b8732"
+       key = "your-key"
     elif period == 3:
        url_yandex = 'https://api.weather.yandex.ru/v2/forecast/?lat=56.3264816&lon=44.0051395&lang=ru_RU&limit=3'
-       yandex_req = req.get(url_yandex, headers={'X-Yandex-API-Key': "36217aea-b2d9-42ef-aaad-0839da8faa04"},
+       yandex_req = req.get(url_yandex, headers={'X-Yandex-API-Key': "your-key"},
                             verify=False)
        yandex_json = json.loads(yandex_req.text)
        print(yandex_json)
