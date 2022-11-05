@@ -112,7 +112,7 @@ for event in longpoll.listen():                               # ждем от с
         reseived_message = event.message.get('text')            # то сохраняем полученное сообщение                                      # в нижний регистр
         reseived_message=reseived_message.translate({ord(c): None for c in string.whitespace})       # если было введено раздельно, убрали пробелы
 
-        chat = event.chat_id                                    # сохраняем номер чата
+        chat = event.chat_id                                    # сохраняем номер чата да
         print('из чата', chat)
         from_id = event.message.get('from_id')
-        menu(reseived_message.lower())
+        menu(reseived_message.lower()) 
