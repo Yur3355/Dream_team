@@ -58,7 +58,7 @@ def print_weather(data,period,i):      # функция получения те�
         temp = current_weather['app_max_temp']
 
         weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(temp) + 'C \n' + "Ветер - " +wind+'\nСкорость ветра - '+ str(wind_spd)+' м/с'
-    elif period == 3:
+    elif period == 6 or 3:
 
         date = current_weather['date']
         temp = current_weather['parts']['morning']['temp_avg']
@@ -93,8 +93,8 @@ def menu(reseived_message):
     if reseived_message == "6часов":
         write_message(chat, "Ваш прогноз:")
         print("Погода на 6 часов отправлена в ", chat)
-        hours = get_weather(6)
-      # write_message(chat, print_weather(hours,6))
+        hours = get_weather(6) 
+        write_message(chat, print_weather(hours,6))
 
     elif reseived_message == "3дня":
         write_message(chat, "Ваш прогноз:")
@@ -125,7 +125,7 @@ for event in longpoll.listen():                               # ждем от с
         reseived_message = event.message.get('text')            # то сохраняем полученное сообщение                                      # в нижний регистр
         reseived_message=reseived_message.translate({ord(c): None for c in string.whitespace})       # если было введено раздельно, убрали пробелы
 
-        chat = event.chat_id                                    # сохраняем номер чата
+        chat = event.chat_id                                    # сохраняем номер чата да
         print('из чата', chat)
         from_id = event.message.get('from_id')
         menu(reseived_message.lower())
