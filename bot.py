@@ -1,58 +1,112 @@
 import vk_api
 import config
-import re
+
 import urllib
 import json
+import requests as req
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.utils import get_random_id
 import string
+import array
 
 token = config.settings['TOKEN']    # присваиваем переменной значение токена из файла конфига
-group_id="216563568"                # id выбранной для работы бота группы
+group_id=config.settings['group_id']               # id выбранной для работы бота группы
 
-def get_weather(period,):
+def get_apis():
+    weather = [] # объявляем лист для хранения апи погоды
+    url = config.api[0] #берем первую ссылку на апи
+    #print(url)
+    json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
+    weather.append(json.loads(json_data)) #добавляем в конец листа наш JSON
+    key = config.settings['yan_key']
+    url = config.api[1]
+    yandex_req = req.get(url, headers={'X-Yandex-API-Key': key}, verify=False)
+    json_data = yandex_req.text
+    weather.append(json.loads(json_data))
+   # print(weather)
+    return weather
+
+def get_numbers(weather):
+    current_weather = weather[0]['data'][0]
+    wind_spd = array.array('f') #массив для скорости ветра типа float
+    temp = array.array('f') #массив для температуры типа float
+    wind_spd.append(current_weather['wind_spd'])  # скорость ветра
+    wind_spd.append(weather[1]['forecasts'][0]['parts']['morning']['wind_speed'])
+    wind_spd1=comparison(wind_spd)
+    temp.append(current_weather['app_temp'])  # температура
+    temp.append(weather[1]['forecasts'][0]['parts']['morning']['temp_avg'])
+    temp1 = comparison(temp)
+    # можно ли будет добавить направление ветра?
+
+    weather = ' - ' + str(temp1) + 'C \n' + '\nСкорость ветра - ' + str(wind_spd1) + ' м/с'
+    return weather
+
+def comparison(num):
+
+    #придуманный алгоритм
+
+
+    return num
+
+def get_weather(period):
      # наш город на координатах широта=56.3264816, долгота=44.0051395
-     # "https://api.openweathermap.org/data/2.5/weather?lat=56.3264816&lon=44.0051395&lang=ru&units=metric&appid=944b91c7a40842198fd6a61c32fe5453"
+
     if period==1:
-        end_point ="https://api.weatherbit.io/v2.0/current?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key=" # запрос к апи weatherbit с параметрами долготы и широты,языка и системой мер
-        key="679b7c2cbd8941de96caea3de21b8732"                  # ключ доступа
+        url = config.api[0]
+        json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
     elif period==7:
-       end_point = "https://api.weatherbit.io/v2.0/forecast/daily?lat=56.3264816&lon=44.0051395&lang=ru&units=M&key="  # запрос к апи с погодой на следующие 7 дней
-       key = "679b7c2cbd8941de96caea3de21b8732"
-    elif period == 3:
-       end_point = "апи"
-       key = "вставить токен апи"
-    elif period == 6:
-       end_point = "апи"
-       key = "вставить токен апи"
+        url = config.api['week']
+        json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
+    elif period == 6 or 3:
+        url_yandex = config.api[1]
+        key=config.settings['yan_key']
+        yandex_req = req.get(url_yandex, headers={'X-Yandex-API-Key': key},verify=False)
+        json_data = yandex_req.text
 
-    url = end_point+key                                    # создаем ссылку
-    json_data = urllib.request.urlopen(url).read()          # читаем данные из JSON полученного из нашей ссылки
-    current_weather= json.loads(json_data)                            # загружаем их в переменную
-
+    current_weather = json.loads(json_data)  # загружаем их в переменную
     return current_weather                                  # возвращаем полученную информацию
 
 def toFixed(numObj, digits=0):
     return f"{numObj:.{digits}f}"
 
-def print_weather(data,period,i):      # функция получения текущего города
+
+def print_weather(period, i):  # функция получения текущего города
     # print(data)
-    current_weather = data['data'][i]  # выбираем нужную нам часть с данными
-    print(data['data'][i])
-    date = current_weather['datetime']
-    desc = current_weather['weather']['description']
-    wind = current_weather['wind_cdir_full']
-    wind_spd = current_weather['wind_spd']
-    wind_spd = toFixed(wind_spd, 2)
-    if period==1:
-        city=current_weather['city_name']
+    # print(data['data'][i])
+
+    if period == 1:
+        data=get_weather(period)
+        current_weather = data['data'][i]  # выбираем нужную нам часть с данными
+        date = current_weather['datetime']
+        desc = current_weather['weather']['description']
+        wind = current_weather['wind_cdir_full']
+        wind_spd = current_weather['wind_spd']
+        wind_spd = toFixed(wind_spd, 2)
+        city = current_weather['city_name']
         temp = current_weather['app_temp']
 
-        weather = date + '\n' + desc + ' - ' + str(temp) + 'C \n' + "Ветер - " + wind+'\nСкорость ветра - '+ str(wind_spd)+' м/с'
-    elif period==7:
+        weather = date + '\n' + desc + ' - ' + str(temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(
+            wind_spd) + ' м/с'
+    elif period == 7:
+        data = get_weather(period)
+        current_weather = data['data'][i]  # выбираем нужную нам часть с данными
+        date = current_weather['datetime']
+        desc = current_weather['weather']['description']
+        wind = current_weather['wind_cdir_full']
+        wind_spd = current_weather['wind_spd']
+        wind_spd = toFixed(wind_spd, 2)
         temp = current_weather['app_max_temp']
 
-        weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(temp) + 'C \n' + "Ветер - " +wind+'\nСкорость ветра - '+ str(wind_spd)+' м/с'
+        weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(
+            temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(wind_spd) + ' м/с'
+    elif period == 6 or 3:
+        data = get_weather(period)
+        current_weather = data['forecasts'][i]
+        date = current_weather['date']
+        temp = current_weather['parts']['morning']['temp_avg']
+        wind = current_weather['parts']['morning']['wind_speed']
+        wind_dir = current_weather['parts']['morning']['wind_dir']
+        weather = date + '\n' + 'температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_dir + '\nСкорость ветра - ' + str(wind) + ' м/с'
     # print(city,'\n',desc,temp,'\n Ветер -',wind)
     # print(weather)
     return weather
@@ -80,28 +134,25 @@ def menu(reseived_message):
     if reseived_message == "6часов":
         write_message(chat, "Ваш прогноз:")
         print("Погода на 6 часов отправлена в ", chat)
-        hours = get_weather(6)
-      # write_message(chat, print_weather(hours,6))
+        write_message(chat, print_weather(6,0))
 
     elif reseived_message == "3дня":
         write_message(chat, "Ваш прогноз:")
         print("Погода на 3 дня отправлена в ", chat)
-        days = get_weather(3)
         for i in range(3):
-         write_message(chat, print_weather(days,3))
+            write_message(chat, print_weather(3, i))
 
     elif reseived_message == "неделя":
         print("Погода на неделю отправлена в ", chat)
         write_message(chat, "Ваш прогноз:")
-        week = get_weather(7)
         for i in range(7):
-         write_message(chat, print_weather(week,7,i))
+         write_message(chat, print_weather(7,i))
 
     elif reseived_message == "текущая":
         print("Текущая погода отправлена в ", chat)
         write_message(chat, "Ваш прогноз:")
-        current = get_weather(1)
-        write_message(chat, print_weather(current,1,0))
+        weather = get_apis()
+        write_message(chat, get_numbers(weather))
 
 
 
@@ -109,7 +160,7 @@ for event in longpoll.listen():                               # ждем от с
     if event.type == VkBotEventType.MESSAGE_NEW and event.from_chat and event.message.get('text'): 
         # если тип ивента это новое сообщение, оно из чата и сообщение в ивенте текстовое
        
-        reseived_message = event.message.get('text')            # то сохраняем полученное сообщение                                      # в нижний регистр
+        reseived_message = event.message.get('text')            # то сохраняем полученное сообщение   # в нижний регистр
         reseived_message=reseived_message.translate({ord(c): None for c in string.whitespace})       # если было введено раздельно, убрали пробелы
 
         chat = event.chat_id                                    # сохраняем номер чата
