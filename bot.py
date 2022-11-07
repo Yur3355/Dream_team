@@ -13,15 +13,16 @@ token = config.settings['TOKEN']    # присваиваем переменно�
 group_id=config.settings['group_id']             # id выбранной для работы бота группы
 
 def get_apis(period):
-    weather = [] # объявляем лист для хранения апи погоды
-   # url = config.api[0] #берем первую ссылку на апи
+     # объявляем лист для хранения апи погоды
+    url = config.api[0] #берем первую ссылку на апи
     #print(url)
-   # json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
-  # weather.append(json.loads(json_data)) #добавляем в конец листа наш JSON
+    json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
+    weather.append(json.loads(json_data)) #добавляем в конец листа наш JSON
     key = config.settings['yan_key']
     url = config.api[1]
     yandex_req = req.get(url, headers={'X-Yandex-API-Key': key}, verify=False)
     json_data = yandex_req.text
+    weather = []
     weather.append(json.loads(json_data))
     if period >= 3:
         for i in range(period):
@@ -55,6 +56,7 @@ def comparison(num):
 
 def toFixed(numObj, digits=0):
     return f"{numObj:.{digits}f}"
+
 def wind_change(wind_dir):
     if wind_dir =="sw":
         dir="Юго-западный"
@@ -73,6 +75,7 @@ def wind_change(wind_dir):
     if wind_dir =="e":
         dir="Восточный"
     return dir
+
 def print_weather(period, i):  # функция получения текущего города
     # print(data)
     data = get_apis(2)
@@ -91,7 +94,7 @@ def print_weather(period, i):  # функция получения текуще�
             temp = current_weather['app_max_temp']
             weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(wind_spd) + ' м/с'
     elif period == 6 or 3:
-        current_weather = data[0]['forecasts'][i]
+        current_weather = data[1]['forecasts'][i]
         date = current_weather['date']
         temp = current_weather['parts']['morning']['temp_avg']
         wind = current_weather['parts']['morning']['wind_speed']
@@ -141,7 +144,7 @@ def menu(reseived_message):
     elif reseived_message == "текущая":
         print("Текущая погода отправлена в ", chat)
         weather = get_apis(2)
-        write_message(chat, get_apis(weather))
+        write_message(chat, get_numbers(weather))
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
