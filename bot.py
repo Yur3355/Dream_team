@@ -30,7 +30,7 @@ def get_numbers(weather):
     temp = array.array('f') #массив для температуры типа float
     wind_spd.append(current_weather['wind_spd'])  # скорость ветра
     wind_spd.append(weather[1]['forecasts'][0]['parts']['morning']['wind_speed'])
-    wind_spd1=comparison(wind_spd)
+    wind_spd1 = comparison(wind_spd)
     temp.append(current_weather['app_temp'])  # температура
     temp.append(weather[1]['forecasts'][0]['parts']['morning']['temp_avg'])
     temp1 = comparison(temp)
@@ -71,9 +71,8 @@ def toFixed(numObj, digits=0):
 
 def print_weather(period, i):  # функция получения текущего города
     # print(data)
-    # print(data['data'][i])
     data = get_weather(period)
-    if period == 1 or 7:
+    if period == 1 | 7:
         current_weather = data['data'][i]  # выбираем нужную нам часть с данными
         date = current_weather['datetime']
         desc = current_weather['weather']['description']
@@ -94,7 +93,6 @@ def print_weather(period, i):  # функция получения текуще�
         wind = current_weather['parts']['morning']['wind_speed']
         wind_dir = current_weather['parts']['morning']['wind_dir']
         weather = date + '\n' + 'температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_dir + '\nСкорость ветра - ' + str(wind) + ' м/с'
-    # print(city,'\n',desc,temp,'\n Ветер -',wind)
     # print(weather)
     return weather
 
