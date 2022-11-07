@@ -71,7 +71,6 @@ def toFixed(numObj, digits=0):
 
 def print_weather(period, i):  # функция получения текущего города
     # print(data)
-    # print(data['data'][i])
     data = get_weather(period)
     if period == 1 or 7:
         current_weather = data['data'][i]  # выбираем нужную нам часть с данными
