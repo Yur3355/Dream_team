@@ -10,6 +10,41 @@ import array
 
 token = config.settings['TOKEN']    # присваиваем переменной значение токена из файла конфига
 group_id=config.settings['group_id']             # id выбранной для работы бота группы
+def get_apis():
+    weather = [] # объявляем лист для хранения апи погоды
+    url = config.api[0] #берем первую ссылку на апи
+    #print(url)
+    json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
+    weather.append(json.loads(json_data)) #добавляем в конец листа наш JSON
+    key = config.settings['yan_key']
+    url = config.api[1]
+    yandex_req = req.get(url, headers={'X-Yandex-API-Key': key}, verify=False)
+    json_data = yandex_req.text
+    weather.append(json.loads(json_data))
+   # print(weather)
+    return weather
+
+def get_numbers(weather):
+    current_weather = weather[0]['data'][0]
+    wind_spd = array.array('f') #массив для скорости ветра типа float
+    temp = array.array('f') #массив для температуры типа float
+    wind_spd.append(current_weather['wind_spd'])  # скорость ветра
+    wind_spd.append(weather[1]['forecasts'][0]['parts']['morning']['wind_speed'])
+    wind_spd1=comparison(wind_spd)
+    temp.append(current_weather['app_temp'])  # температура
+    temp.append(weather[1]['forecasts'][0]['parts']['morning']['temp_avg'])
+    temp1 = comparison(temp)
+    # можно ли будет добавить направление ветра?
+
+    weather = ' - ' + str(temp1) + 'C \n' + '\nСкорость ветра - ' + str(wind_spd1) + ' м/с'
+    return weather
+
+def comparison(num):
+
+    #придуманный алгоритм
+
+
+    return num
 
 def get_weather(period):
      # наш город на координатах широта=56.3264816, долгота=44.0051395
