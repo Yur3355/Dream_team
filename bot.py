@@ -7,14 +7,13 @@ from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.utils import get_random_id
 import string
 import array
-urllib.disable_warnings()
+
 
 token = config.settings['TOKEN']    # присваиваем переменной значение токена из файла конфига
 group_id=config.settings['group_id']             # id выбранной для работы бота группы
 
 def get_apis(period):
     weather = [] # объявляем лист для хранения апи погоды
-
     url = config.api[0] #берем первую ссылку на апи
     #print(url)
     json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
@@ -24,11 +23,11 @@ def get_apis(period):
     yandex_req = req.get(url, headers={'X-Yandex-API-Key': key}, verify=False)
     json_data = yandex_req.text
     weather.append(json.loads(json_data))
-    if period>2:
-        for i in range(period):
-            url = config.api[i+2]
-            json_data = urllib.request.urlopen(url).read()
-            weather.append(json.loads(json_data))
+    #if period >= 2:
+     #   for i in range(period):
+         #   url = config.api[i+2]
+          #  json_data = urllib.request.urlopen(url).read()
+            #weather.append(json.loads(json_data))
    # print(weather)
     return weather
 
@@ -43,16 +42,16 @@ def get_numbers(weather):
     temp.append(weather[1]['forecasts'][0]['parts']['morning']['temp_avg'])
     temp1 = comparison(temp)
     # можно ли будет добавить направление ветра?
-
-    weather = ' - ' + str(temp1) + 'C \n' + '\nСкорость ветра - ' + str(wind_spd1) + ' м/с'
+    date = weather[1]['date']
+    wind_dir =weather[1]['parts']['morning']['wind_dir']
+    weather = date + '\n' + 'температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_dir + '\nСкорость ветра - ' + str(wind) + ' м/с'
     return weather
 
 def comparison(num):
 
-    #придуманный алгоритм
+    average=sum(num)/len(num)
 
-
-    return num
+    return average
 
 def toFixed(numObj, digits=0):
     return f"{numObj:.{digits}f}"
@@ -125,7 +124,7 @@ def menu(reseived_message):
     elif reseived_message == "текущая":
         print("Текущая погода отправлена в ", chat)
         weather = get_apis(2)
-        write_message(chat, print_weather(1,0))
+        write_message(chat, get_apis(weather))
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
