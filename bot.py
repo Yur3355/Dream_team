@@ -45,7 +45,7 @@ def get_numbers(weather):
     # можно ли будет добавить направление ветра?
     date = weather[1]['date']
     wind_dir =weather[1]['parts']['morning']['wind_dir']
-    weather = date + '\n' + 'Температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_change(wind_dir) + '\nСкорость ветра - ' + str(wind) + ' м/с'
+    weather = date + '\n' + 'Температура - ' + str(temp1) + 'C \n' + "Ветер - " + wind_change(wind_dir) + '\nСкорость ветра - ' + str(wind_spd1) + ' м/с'
     return weather
 
 def comparison(num):
