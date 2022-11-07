@@ -14,20 +14,20 @@ group_id=config.settings['group_id']             # id выбранной для 
 
 def get_apis(period):
     weather = [] # объявляем лист для хранения апи погоды
-    url = config.api[0] #берем первую ссылку на апи
+   # url = config.api[0] #берем первую ссылку на апи
     #print(url)
-    json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
-    weather.append(json.loads(json_data)) #добавляем в конец листа наш JSON
+   # json_data = urllib.request.urlopen(url).read()  # читаем данные из JSON полученного из нашей ссылки
+  # weather.append(json.loads(json_data)) #добавляем в конец листа наш JSON
     key = config.settings['yan_key']
     url = config.api[1]
     yandex_req = req.get(url, headers={'X-Yandex-API-Key': key}, verify=False)
     json_data = yandex_req.text
     weather.append(json.loads(json_data))
-    #if period >= 2:
-     #   for i in range(period):
-         #   url = config.api[i+2]
-          #  json_data = urllib.request.urlopen(url).read()
-            #weather.append(json.loads(json_data))
+    if period >= 3:
+        for i in range(period):
+            url = config.api[i+2]
+            json_data = urllib.request.urlopen(url).read()
+            weather.append(json.loads(json_data))
    # print(weather)
     return weather
 
@@ -44,7 +44,7 @@ def get_numbers(weather):
     # можно ли будет добавить направление ветра?
     date = weather[1]['date']
     wind_dir =weather[1]['parts']['morning']['wind_dir']
-    weather = date + '\n' + 'температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_dir + '\nСкорость ветра - ' + str(wind) + ' м/с'
+    weather = date + '\n' + 'Температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_change(wind_dir) + '\nСкорость ветра - ' + str(wind) + ' м/с'
     return weather
 
 def comparison(num):
@@ -55,7 +55,24 @@ def comparison(num):
 
 def toFixed(numObj, digits=0):
     return f"{numObj:.{digits}f}"
-
+def wind_change(wind_dir):
+    if wind_dir =="sw":
+        dir="Юго-западный"
+    if wind_dir =="se":
+        dir="Юго-восточный"
+    if wind_dir =="s":
+        dir="Южный"
+    if wind_dir =="n":
+        dir="Северный"
+    if wind_dir =="ne":
+        dir="Северо-восточный"
+    if wind_dir =="nw":
+        dir="Северо-западный"
+    if wind_dir =="w":
+        dir="Западный"
+    if wind_dir =="e":
+        dir="Восточный"
+    return dir
 def print_weather(period, i):  # функция получения текущего города
     # print(data)
     data = get_apis(2)
@@ -74,12 +91,12 @@ def print_weather(period, i):  # функция получения текуще�
             temp = current_weather['app_max_temp']
             weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(wind_spd) + ' м/с'
     elif period == 6 or 3:
-        current_weather = data[1]['forecasts'][i]
+        current_weather = data[0]['forecasts'][i]
         date = current_weather['date']
         temp = current_weather['parts']['morning']['temp_avg']
         wind = current_weather['parts']['morning']['wind_speed']
         wind_dir = current_weather['parts']['morning']['wind_dir']
-        weather = date + '\n' + 'температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_dir + '\nСкорость ветра - ' + str(wind) + ' м/с'
+        weather = date + '\n' + 'Температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_change(wind_dir) + '\nСкорость ветра - ' + str(wind) + ' м/с'
     # print(weather)
     return weather
 
