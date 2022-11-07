@@ -6,11 +6,11 @@ import requests as req
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 from vk_api.utils import get_random_id
 import string
+import array
 
 
 token = config.settings['TOKEN']    # присваиваем переменной значение токена из файла конфига
 group_id=config.settings['group_id']             # id выбранной для работы бота группы
-
 
 def get_apis(period):
      # объявляем лист для хранения апи погоды
@@ -100,7 +100,6 @@ def print_weather(period, i):  # функция получения текуще�
         wind = current_weather['parts']['morning']['wind_speed']
         wind_dir = current_weather['parts']['morning']['wind_dir']
         weather = date + '\n' + 'Температура - ' + str(temp) + 'C \n' + "Ветер - " + wind_change(wind_dir) + '\nСкорость ветра - ' + str(wind) + ' м/с'
-
     # print(weather)
     return weather
 
@@ -115,7 +114,8 @@ longpoll = VkBotLongPoll(authorize, group_id="216563568")      # отправл�
 print("Бот запущен!")
 
 def menu(reseived_message):
-    if reseived_message == "привет":
+
+    if reseived_message=="привет":    
         write_message(chat, "Вас приветствует бот прогноза погоды. Хотите узнать прогноз? \nда \nнет")
 
     elif reseived_message == "нет":
@@ -145,7 +145,6 @@ def menu(reseived_message):
         print("Текущая погода отправлена в ", chat)
         weather = get_apis(2)
         write_message(chat, get_numbers(weather))
-
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
