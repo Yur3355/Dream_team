@@ -33,37 +33,26 @@ def toFixed(numObj, digits=0):
     return f"{numObj:.{digits}f}"
 
 
+
 def print_weather(period, i):  # функция получения текущего города
     # print(data)
     # print(data['data'][i])
-
-    if period == 1:
-        data=get_weather(period)
+    data = get_weather(period)
+    if period == 1 or 7:
         current_weather = data['data'][i]  # выбираем нужную нам часть с данными
         date = current_weather['datetime']
         desc = current_weather['weather']['description']
         wind = current_weather['wind_cdir_full']
         wind_spd = current_weather['wind_spd']
         wind_spd = toFixed(wind_spd, 2)
-        city = current_weather['city_name']
-        temp = current_weather['app_temp']
-
-        weather = date + '\n' + desc + ' - ' + str(temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(
-            wind_spd) + ' м/с'
-    elif period == 7:
-        data = get_weather(period)
-        current_weather = data['data'][i]  # выбираем нужную нам часть с данными
-        date = current_weather['datetime']
-        desc = current_weather['weather']['description']
-        wind = current_weather['wind_cdir_full']
-        wind_spd = current_weather['wind_spd']
-        wind_spd = toFixed(wind_spd, 2)
-        temp = current_weather['app_max_temp']
-
-        weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(
-            temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(wind_spd) + ' м/с'
+        if period == 1:
+            city = current_weather['city_name']
+            temp = current_weather['app_temp']
+            weather = date + '\n' + desc + ' - ' + str(temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(wind_spd) + ' м/с'
+        elif period == 7:
+            temp = current_weather['app_max_temp']
+            weather = date + '\n' + desc + ' - ' + 'макс. температура - ' + str(temp) + 'C \n' + "Ветер - " + wind + '\nСкорость ветра - ' + str(wind_spd) + ' м/с'
     elif period == 6 or 3:
-        data = get_weather(period)
         current_weather = data['forecasts'][i]
         date = current_weather['date']
         temp = current_weather['parts']['morning']['temp_avg']
@@ -73,6 +62,7 @@ def print_weather(period, i):  # функция получения текуще�
     # print(city,'\n',desc,temp,'\n Ветер -',wind)
     # print(weather)
     return weather
+
 
 def write_message(chat, message):                           # функция отправки сообщения в чат ,получает его номер и сообщение
     authorize.method('messages.send', {'chat_id': chat, 'message': message, 'random_id': get_random_id()})
