@@ -99,8 +99,7 @@ def menu(reseived_message):
 
     elif reseived_message == "текущая":
         print("Текущая погода отправлена в ", chat)
-        weather = get_apis()
-        write_message(chat, get_numbers(weather))
+        write_message(chat, get_numbers(1,0))
 
 
 for event in longpoll.listen():                               # ждем от сервера ответа о произошедшем событии
